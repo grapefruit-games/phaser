@@ -217,6 +217,13 @@ var MultiPipeline = new Class({
          * @since 3.55.0
          */
         this.polygonCache = [];
+        },
+
+    calcCamOffset: function(x, y, camera, scrollFactorX, scrollFactorY) {
+        return {
+            x: - camera.scrollX + ( x - camera.worldView.centerX ) * ( 1 - scrollFactorX ),
+            y: - camera.scrollY + ( y - camera.worldView.centerY ) * ( 1 - scrollFactorY ),
+        }
     },
 
     /**
@@ -326,10 +333,11 @@ var MultiPipeline = new Class({
 
         camMatrix.copyFrom(camera.matrix);
 
+        let camOffset = this.calcCamOffset( gameObject.x, gameObject.y, camera, gameObject.scrollFactorX, gameObject.scrollFactorY )
         if (parentTransformMatrix)
         {
             //  Multiply the camera by the parent matrix
-            camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * gameObject.scrollFactorX, -camera.scrollY * gameObject.scrollFactorY);
+            camMatrix.multiplyWithOffset(parentTransformMatrix, camOffset.x, camOffset.y);
 
             //  Undo the camera scroll
             spriteMatrix.e = gameObject.x;
@@ -337,8 +345,8 @@ var MultiPipeline = new Class({
         }
         else
         {
-            spriteMatrix.e -= camera.scrollX * gameObject.scrollFactorX;
-            spriteMatrix.f -= camera.scrollY * gameObject.scrollFactorY;
+            spriteMatrix.e += camOffset.x;
+            spriteMatrix.f += camOffset.y;
         }
 
         //  Multiply by the Sprite matrix, store result in calcMatrix
@@ -516,10 +524,11 @@ var MultiPipeline = new Class({
 
         camMatrix.copyFrom(camera.matrix);
 
+        let camOffset = this.calcCamOffset( srcX, srcY, camera, scrollFactorX, scrollFactorY )
         if (parentTransformMatrix)
         {
             //  Multiply the camera by the parent matrix
-            camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * scrollFactorX, -camera.scrollY * scrollFactorY);
+            camMatrix.multiplyWithOffset(parentTransformMatrix, camOffset.x, camOffset.y);
 
             //  Undo the camera scroll
             spriteMatrix.e = srcX;
@@ -527,8 +536,8 @@ var MultiPipeline = new Class({
         }
         else
         {
-            spriteMatrix.e -= camera.scrollX * scrollFactorX;
-            spriteMatrix.f -= camera.scrollY * scrollFactorY;
+            spriteMatrix.e += camOffset.x;
+            spriteMatrix.f += camOffset.y;
         }
 
         //  Multiply by the Sprite matrix, store result in calcMatrix
@@ -988,8 +997,7 @@ var MultiPipeline = new Class({
             prev[3] = trY;
             prev[4] = 1;
         }
-    }
-
+    },
 });
 
 module.exports = MultiPipeline;
