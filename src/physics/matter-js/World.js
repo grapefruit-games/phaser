@@ -1016,8 +1016,7 @@ var World = new Class({
 
         for (var i = 0; i < tiles.length; i++)
         {
-            const tileOptions = JSON.parse(JSON.stringify(options));
-            new MatterTileBody(this, tiles[i], tileOptions);
+            new MatterTileBody(this, tiles[i], options);
         }
 
         return this;
