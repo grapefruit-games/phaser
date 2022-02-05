@@ -408,7 +408,7 @@ var SpriteFXPipeline = new Class({
         //  batchQuad will intercept the rendering
 
         //  Needed for Text & TileSprite - how about others?
-        flipY = true;
+        // flipY = true;
 
         MultiPipeline.prototype.batchTexture.call(this, gameObject, texture, textureWidth, textureHeight, srcX, srcY, srcWidth, srcHeight, scaleX, scaleY, rotation, flipX, flipY, scrollFactorX, scrollFactorY, displayOriginX, displayOriginY, frameX, frameY, frameWidth, frameHeight, tintTL, tintTR, tintBL, tintBR, tintEffect, uOffset, vOffset, camera, parentTransformMatrix, skipFlip, textureUnit);
     },
@@ -539,7 +539,7 @@ var SpriteFXPipeline = new Class({
         //  Set this here, so we can immediately call the set uniform functions and it'll work on the correct shader
         this.currentShader = this.copyShader;
 
-        this.onDraw(target, this.manager.getSwapRenderTarget());
+        this.onDraw(target, this.manager.getSwapRenderTarget(), this.manager.getAltSwapRenderTarget());
 
         return true;
     },
@@ -838,7 +838,8 @@ var SpriteFXPipeline = new Class({
      * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} target - The Render Target to draw to the game.
-     * @param {Phaser.Renderer.WebGL.RenderTarget} swapTarget - The Swap Render Target, useful for double-buffef effects.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [swapTarget] - The Swap Render Target, useful for double-buffer effects.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [altSwapTarget] - The Swap Render Target, useful for double-buffer effects.
      */
     onDraw: function (target)
     {

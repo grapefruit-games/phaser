@@ -44,12 +44,14 @@ var WebGLPipeline = require('../WebGLPipeline');
  * `uProjectionMatrix` (mat4)
  * `uMainSampler` (sampler2D array)
  *
- * If you wish to create a custom pipeline extending from this one, you can use two string
- * declarations in your fragment shader source: `%count%` and `%forloop%`, where `count` is
- * used to set the number of `sampler2Ds` available, and `forloop` is a block of GLSL code
- * that will get the currently bound texture unit.
+ * If you wish to create a custom pipeline extending from this one, you should use the string
+ * declaration `%count%` in your fragment shader source, which is used to set the number of
+ * `sampler2Ds` available. Also add `%getSampler%` so Phaser can inject the getSampler glsl function.
+ * This function can be used to get the pixel vec4 from the texture:
  *
- * This pipeline will automatically inject that code for you, should those values exist
+ * `vec4 texture = getSampler(int(outTexId), outTexCoord);`
+ *
+ * This pipeline will automatically inject the getSampler function for you, should the value exist
  * in your shader source. If you wish to handle this yourself, you can also use the
  * function `Utils.parseFragmentShaderMaxTextures`.
  *

@@ -485,20 +485,12 @@ var SceneManager = new Class({
         {
             scene.preload.call(scene);
 
-            //  Is the loader empty?
-            if (loader.list.size === 0)
-            {
-                this.create(scene);
-            }
-            else
-            {
-                settings.status = CONST.LOADING;
+            settings.status = CONST.LOADING;
 
-                //  Start the loader going as we have something in the queue
-                loader.once(LoaderEvents.COMPLETE, this.loadComplete, this);
+            //  Start the loader going as we have something in the queue
+            loader.once(LoaderEvents.COMPLETE, this.loadComplete, this);
 
-                loader.start();
-            }
+            loader.start();
         }
         else
         {
@@ -520,6 +512,13 @@ var SceneManager = new Class({
      */
     loadComplete: function (loader)
     {
+        //  TODO - Remove. This should *not* be handled here
+        //  Try to unlock HTML5 sounds every time any loader completes
+        if (this.game.sound && this.game.sound.onBlurPausedSounds)
+        {
+            this.game.sound.unlock();
+        }
+
         this.create(loader.scene);
     },
 
@@ -1466,7 +1465,7 @@ var SceneManager = new Class({
                 this.scenes.splice(indexB, 1);
 
                 //  Add in new location
-                this.scenes.splice(indexA + 1, 0, tempScene);
+                this.scenes.splice(indexA + (indexB > indexA), 0, tempScene);
             }
         }
 
@@ -1516,7 +1515,7 @@ var SceneManager = new Class({
                 else
                 {
                     //  Add in new location
-                    this.scenes.splice(indexA, 0, tempScene);
+                    this.scenes.splice(indexA - (indexB < indexA), 0, tempScene);
                 }
             }
         }

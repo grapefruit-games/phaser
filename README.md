@@ -72,6 +72,11 @@ There are other benefits to [backing Phaser](https://www.patreon.com/join/photon
 
 We use [Patreon](https://www.patreon.com/photonstorm) to manage the backing and you can [support Phaser](https://www.patreon.com/join/photonstorm?) from $1 per month. The amount you pledge is entirely up to you and can be changed as often as you like. Patreon renews monthly, just like Netflix. You can, of course, cancel at any point. Tears will be shed on this end, but that's not your concern.
 
+You can also support us by using crypto currencies. The Phaser wallet addresses are:
+
+* Ethereum: 0x10412d654b44570950631aA0C3E3f3aFcAEfAB4C
+* Bitcoin: 3MjS5iNH8yUBfYW2emxBk7rRUkP6ncrkXC
+
 Extra special thanks to the following companies whose support makes Phaser possible:
 
 * [Cerebral Fix](https://cerebralfix.com)
@@ -173,13 +178,13 @@ Tutorials and guides on Phaser 3 development are being published every week.
 * [Getting Started with Phaser 3](https://phaser.io/tutorials/getting-started-phaser3) (useful if you are completely new to Phaser)
 * [Making your first Phaser 3 Game](https://phaser.io/tutorials/making-your-first-phaser-3-game)
 * The [Complete Phaser 3 Game Development course](https://academy.zenva.com/product/html5-game-phaser-mini-degree/?a=13) contains over 15 hours of videos covering all kinds of important topics.
-* Plus, there are [over 700 Phaser tutorials](http://phaser.io/learn) listed on the official website.
+* Plus, there are [over 700 Phaser tutorials](https://phaser.io/learn) listed on the official website.
 
 We've 3 tutorials related specifically to creating **Facebook Instant Games** with Phaser:
 
-* [Getting Started with Facebook Instant Games](http://phaser.io/news/2018/10/facebook-instant-games-phaser-tutorial)
-* [Facebook Instant Games Leaderboards Tutorial](http://phaser.io/news/2018/11/facebook-instant-games-leaderboards-tutorial)
-* [Displaying Ads in your Instant Games](http://phaser.io/news/2018/12/facebook-instant-games-ads-tutorial)
+* [Getting Started with Facebook Instant Games](https://phaser.io/news/2018/10/facebook-instant-games-phaser-tutorial)
+* [Facebook Instant Games Leaderboards Tutorial](https://phaser.io/news/2018/11/facebook-instant-games-leaderboards-tutorial)
+* [Displaying Ads in your Instant Games](https://phaser.io/news/2018/12/facebook-instant-games-ads-tutorial)
 
 ### Source Code Examples
 
