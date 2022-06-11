@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -1125,7 +1125,9 @@ var SceneManager = new Class({
     },
 
     /**
-     * Starts the given Scene.
+     * Starts the given Scene, if it is not starting, loading, or creating.
+     *
+     * If the Scene is running, paused, or sleeping, it will be shutdown and then started.
      *
      * @method Phaser.Scenes.SceneManager#start
      * @since 3.0.0
@@ -1157,10 +1159,18 @@ var SceneManager = new Class({
         }
 
         var sys = scene.sys;
+        var status = sys.settings.status;
 
-        //  If the Scene is already running (perhaps they called start from a launched sub-Scene?)
-        //  then we close it down before starting it again.
-        if (sys.isActive() || sys.isPaused())
+        //  If the scene is already started but not yet running,
+        //  let it continue.
+        if (status >= CONST.START && status <= CONST.CREATING)
+        {
+            return this;
+        }
+
+        //  If the Scene is already running, paused, or sleeping,
+        //  close it down before starting it again.
+        else if (status >= CONST.RUNNING && status <= CONST.SLEEPING)
         {
             sys.shutdown();
 
@@ -1168,6 +1178,9 @@ var SceneManager = new Class({
 
             sys.start(data);
         }
+
+        //  If the Scene is INIT or SHUTDOWN,
+        //  start it directly.
         else
         {
             sys.sceneUpdate = NOOP;
@@ -1221,6 +1234,11 @@ var SceneManager = new Class({
 
         if (scene && !scene.sys.isTransitioning() && scene.sys.settings.status !== CONST.SHUTDOWN)
         {
+            var loader = scene.sys.load;
+
+            loader.off(LoaderEvents.COMPLETE, this.loadComplete, this);
+            loader.off(LoaderEvents.COMPLETE, this.payloadComplete, this);
+
             scene.sys.shutdown(data);
         }
 
@@ -1457,7 +1475,7 @@ var SceneManager = new Class({
             var indexA = this.getIndex(keyA);
             var indexB = this.getIndex(keyB);
 
-            if (indexA !== -1 && indexB !== -1)
+            if (indexA !== -1 && indexB !== -1 && indexB < indexA)
             {
                 var tempScene = this.getAt(indexB);
 
@@ -1480,7 +1498,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#moveBelow
      * @since 3.2.0
      *
-     * @param {(string|Phaser.Scene)} keyA - The Scene that Scene B will be moved above.
+     * @param {(string|Phaser.Scene)} keyA - The Scene that Scene B will be moved below.
      * @param {(string|Phaser.Scene)} keyB - The Scene to be moved.
      *
      * @return {this} This Scene Manager instance.
@@ -1501,7 +1519,7 @@ var SceneManager = new Class({
             var indexA = this.getIndex(keyA);
             var indexB = this.getIndex(keyB);
 
-            if (indexA !== -1 && indexB !== -1)
+            if (indexA !== -1 && indexB !== -1 && indexB > indexA)
             {
                 var tempScene = this.getAt(indexB);
 

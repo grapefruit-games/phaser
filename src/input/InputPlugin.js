@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -2486,10 +2486,11 @@ var InputPlugin = new Class({
         if (debug)
         {
             debug.isFilled = false;
+            debug.strokeColor = color;
 
             debug.preUpdate = function ()
             {
-                debug.setStrokeStyle(1 / gameObject.scale, color);
+                debug.setStrokeStyle(1 / gameObject.scale, debug.strokeColor);
 
                 debug.setDisplayOrigin(gameObject.displayOriginX, gameObject.displayOriginY);
 

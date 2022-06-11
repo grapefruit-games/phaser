@@ -1,12 +1,11 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
-var DistanceBetween = require('../../math/distance/DistanceBetween');
 
 /**
  * @classdesc
@@ -340,16 +339,10 @@ var Particle = new Class({
         {
             var mx = emitter.moveToX.onEmit(this, 'moveToX');
             var my = (emitter.moveToY) ? emitter.moveToY.onEmit(this, 'moveToY') : mx;
+            var lifeS = this.life / 1000;
 
-            var angle = Math.atan2(my - this.y, mx - this.x);
-
-            var speed = DistanceBetween(this.x, this.y, mx, my) / (this.life / 1000);
-
-            //  We know how many pixels we need to move, but how fast?
-            // var speed = this.distanceToXY(displayObject, x, y) / (maxTime / 1000);
-
-            this.velocityX = Math.cos(angle) * speed;
-            this.velocityY = Math.sin(angle) * speed;
+            this.velocityX = (mx - this.x) / lifeS;
+            this.velocityY = (my - this.y) / lifeS;
         }
         else
         {

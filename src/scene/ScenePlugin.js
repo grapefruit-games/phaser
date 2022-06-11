@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -240,6 +240,8 @@ var ScenePlugin = new Class({
 
     /**
      * This will start a transition from the current Scene to the target Scene given.
+     *
+     * The target Scene cannot be the same as the current Scene.
      *
      * The transition will last for the duration specified in milliseconds.
      *

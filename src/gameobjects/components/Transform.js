@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22,6 +22,17 @@ var _FLAG = 4; // 0100
  */
 
 var Transform = {
+
+    /**
+     * A property indicating that a Game Object has this component.
+     *
+     * @name Phaser.GameObjects.Components.Transform#hasTransformComponent
+     * @type {boolean}
+     * @readonly
+     * @default true
+     * @since 3.60.0
+     */
+    hasTransformComponent: true,
 
     /**
      * Private internal value. Holds the horizontal scale value.

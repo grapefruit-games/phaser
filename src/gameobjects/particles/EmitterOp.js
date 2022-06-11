@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -237,6 +237,12 @@ var EmitterOp = new Class({
         //  Reset them in case they're not changed below
         this.onEmit = this.defaultEmit;
         this.onUpdate = this.defaultUpdate;
+
+        //  `moveToX` and `moveToY` are null by default
+        if (value === null)
+        {
+            return;
+        }
 
         if (t === 'number')
         {

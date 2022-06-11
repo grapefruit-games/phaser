@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -146,7 +146,7 @@ var BitmapTextCanvasRenderer = function (renderer, src, camera, parentMatrix)
 
         x += lineOffsetX;
 
-        xAdvance += glyph.xAdvance + letterSpacing;
+        xAdvance += glyph.xAdvance + letterSpacing + ((kerningOffset !== undefined) ? kerningOffset : 0);
         lastGlyph = glyph;
         lastCharCode = charCode;
 

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -203,7 +203,7 @@ var ImageFile = new Class({
     {
         var linkFile = this.linkFile;
 
-        if (linkFile && linkFile.state === CONST.FILE_COMPLETE)
+        if (linkFile && linkFile.state >= CONST.FILE_COMPLETE)
         {
             if (this.type === 'image')
             {

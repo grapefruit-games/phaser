@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -433,10 +433,8 @@ var AnimationManager = new Class({
 
                 if (!tags || (tags && tags.indexOf(name) > -1))
                 {
-                    //  Get all the frames for this tag
-                    var tempFrames = [];
-                    var minDuration = Number.MAX_SAFE_INTEGER;
-
+                    //  Get all the frames for this tag and calculate the total duration in milliseconds.
+                    var totalDuration = 0;
                     for (var i = from; i <= to; i++)
                     {
                         var frameKey = i.toString();
@@ -445,26 +443,18 @@ var AnimationManager = new Class({
                         if (frame)
                         {
                             var frameDuration = GetFastValue(frame, 'duration', Number.MAX_SAFE_INTEGER);
-
-                            if (frameDuration < minDuration)
-                            {
-                                minDuration = frameDuration;
-                            }
-
-                            tempFrames.push({ frame: frameKey, duration: frameDuration });
+                            animFrames.push({ key: key, frame: frameKey, duration: frameDuration });
+                            totalDuration += frameDuration;
                         }
                     }
 
-                    tempFrames.forEach(function (entry)
-                    {
-                        animFrames.push({
-                            key: key,
-                            frame: entry.frame,
-                            duration: (entry.duration - minDuration)
-                        });
-                    });
+                    // Fix duration to play nice with how the next tick is calculated.
+                    var msPerFrame = totalDuration / animFrames.length;
 
-                    var totalDuration = (minDuration * animFrames.length);
+                    animFrames.forEach(function (entry)
+                    {
+                        entry.duration -= msPerFrame;
+                    });
 
                     if (direction === 'reverse')
                     {
@@ -609,9 +599,9 @@ var AnimationManager = new Class({
      * Example:
      *
      * If you have a texture atlases loaded called `gems` and it contains 6 frames called `ruby_0001`, `ruby_0002`, and so on,
-     * then you can call this method using: `this.anims.generateFrameNames('gems', { prefix: 'ruby_', end: 6, zeroPad: 4 })`.
+     * then you can call this method using: `this.anims.generateFrameNames('gems', { prefix: 'ruby_', start: 1, end: 6, zeroPad: 4 })`.
      *
-     * The `end` value tells it to look for 6 frames, incrementally numbered, all starting with the prefix `ruby_`. The `zeroPad`
+     * The `end` value tells it to select frames 1 through 6, incrementally numbered, all starting with the prefix `ruby_`. The `zeroPad`
      * value tells it how many zeroes pad out the numbers. To create an animation using this method, you can do:
      *
      * ```javascript

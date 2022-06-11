@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -20,7 +20,7 @@ var FX = {
      * when it is being rendered by a SpriteFX Pipeline.
      *
      * Lots of FX require additional spacing added to the texture the
-     * Game Object uses, for example a glow or shaddow effect, and this
+     * Game Object uses, for example a glow or shadow effect, and this
      * method allows you to control how much extra padding is included
      * in addition to the texture size.
      *
@@ -36,7 +36,7 @@ var FX = {
      * when it is being rendered by a SpriteFX Pipeline.
      *
      * Lots of FX require additional spacing added to the texture the
-     * Game Object uses, for example a glow or shaddow effect, and this
+     * Game Object uses, for example a glow or shadow effect, and this
      * method allows you to control how much extra padding is included
      * in addition to the texture size.
      *
