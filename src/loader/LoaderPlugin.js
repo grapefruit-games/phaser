@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,6 +11,7 @@ var EventEmitter = require('eventemitter3');
 var Events = require('./events');
 var FileTypesManager = require('./FileTypesManager');
 var GetFastValue = require('../utils/object/GetFastValue');
+var GetValue = require('../utils/object/GetValue');
 var PluginCache = require('../plugins/PluginCache');
 var SceneEvents = require('../scene/events');
 var XHRSettings = require('./XHRSettings');
@@ -215,6 +216,18 @@ var LoaderPlugin = new Class({
          * @since 3.60.0
          */
         this.imageLoadType = GetFastValue(sceneConfig, 'imageLoadType', gameConfig.loaderImageLoadType);
+
+        /**
+         * An array of all schemes that the Loader considers as being 'local'.
+         *
+         * This is populated by the `Phaser.Core.Config#loaderLocalScheme` game configuration setting and defaults to
+         * `[ 'file://', 'capacitor://' ]`. Additional local schemes can be added to this array as needed.
+         *
+         * @name Phaser.Loader.LoaderPlugin#localSchemes
+         * @type {string[]}
+         * @since 3.60.0
+         */
+        this.localSchemes = GetFastValue(sceneConfig, 'localScheme', gameConfig.loaderLocalScheme);
 
         /**
          * The total number of files to load. It may not always be accurate because you may add to the Loader during the process
@@ -603,9 +616,13 @@ var LoaderPlugin = new Class({
     addPack: function (pack, packKey)
     {
         //  if no packKey provided we'll add everything to the queue
-        if (packKey && pack.hasOwnProperty(packKey))
+        if (typeof(packKey) === 'string')
         {
-            pack = { packKey: pack[packKey] };
+            var subPack = GetValue(pack, packKey);
+            if (subPack)
+            {
+                pack = { packKey: subPack };
+            }
         }
 
         var total = 0;

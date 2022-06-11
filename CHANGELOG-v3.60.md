@@ -88,6 +88,12 @@ We have updated the version of Matter Physics to the latest v0.18 release. This 
 * `Mesh.setTint` is a new method that will set the tint color across all vertices of a Mesh (thanks @rexrainbow)
 * `Mesh.tint` is a new setter that will  set the tint color across all vertices of a Mesh (thanks @rexrainbow)
 * `Mesh.clearTint` is a new method that will clear the tint from all vertices of a Mesh (thanks @rexrainbow)
+* You can now use dot notation as the datakey when defining a Loader Pack File (thanks @rexrainbow)
+* `Vector2.project` is a new method that will project the vector onto the given vector (thanks @samme)
+* Experimental feature: The `TilemapLayer` now has the `Mask` component - meaning you can apply a mask to tilemaps (thanks @samme)
+* `TilemapLayer.setTint` is a new method that allows you to set the tint color of all tiles in the given area, optionally based on the filtering search options. This is a WebGL only feature.
+* `RenderTexture.setIsSpriteTexture` is a new method that allows you to flag a Render Texture as being used as the source for Sprite Game Object textures. You can also toggle the new boolean property `isSpriteTexture` as well. Doing this ensures that images drawn to the Render Texture are correctly inverted for rendering in WebGL. Not doing so can cause inverted frames. If you use this method, you must use it before drawing anything to the Render Texture. Fix #6057 #6017 (thanks @andymikulski @Grandnainconnu)
+* `UtilityPipeline.blitFrame` has a new optional boolean parameter `flipY` which, if set, will invert the source Render Target while drawing it to the destination Render Target.
 
 ### Geom Updates
 
@@ -104,6 +110,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * `MultiFile.destroy` is a new method that clears down all external references of the file, helping free-up resources.
 * `File.addToCache` no longer calls `File.pendingDestroy`, instead this is now handled by the Loader Plugin.
 * There is a new File constant `FILE_PENDING_DESTROY` which is used to ensure Files aren't flagged for destruction more than once.
+* `LoaderPlugin.localSchemes` is a new array of scheme strings that the Loader considers as being local files. This is populated by the new `Phaser.Core.Config#loaderLocalScheme` game / scene config property. It defaults to `[ 'file://', 'capacitor://' ]` but additional schemes can be defined or pushed onto this array. Based on #6010 (thanks @kglogocki)
 
 ### Updates
 
@@ -138,6 +145,23 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The `path` package used by the TS Defs generator has been moved to `devDependencies` (thanks @antkhnvsk)
 * The `GetValue` function has a new optional parameter `altSource` which allows you to provide an alternative object to source the value from.
 * The `Renderer.Snapshot.WebGL` function has had its first parameter changed from an `HTMLCanvasElement` to a `WebGLRenderingContext`. This is now passed in from the `snapshot` methods inside the WebGL Renderer. The change was made to allow it to work with WebGL2 custom contexts (thanks @andymikulski)
+* If you start a Scene that is already starting (START, LOADING, or CREATING) then the start operation is now ignored (thanks @samme)
+* If you start a Scene that is Sleeping, it is shut down before starting again. This matches how Phaser currently handles paused scenes (thanks @samme)
+* The right-click context menu used to be disabled on the document.body via the `disableContextMenu` function, but instead now uses the MouseManager / TouchManager targets, which if not specified defaults to the game canvas. Fix # (thanks @lukashass)
+* The Particle 'moveTo' calculations have been simplied and made more efficient (thanks @samme)
+* The `Key.reset` method no longer resets the `Key.enabled` or `Key.preventDefault` booleans back to `true` again, but only resets the state of the Key. Fix #6098 (thanks @descodifica)
+* When setting the Input Debug Hit Area color it was previously fixed to the value given when created. The value is now taken from the object directly, meaning you can set `gameObject.hitAreaDebug.strokeColor` in real-time (thanks @spayton)
+* You can now have a particle frequency smaller than the delta step, which would previously lead to inconsistencies in emission rates (thanks @samme)
+* The `Light` Game Object now has the `Origin` and `Transform` components, along with 4 new properties: `width`, `height`, `displayWidth` and `displayHeight`. This allows you to add a Light to a Container, or enable it for physics. Fix #6126 (thanks @jcoppage)
+* The `Transform` Component has a new boolean read-only property `hasTransformComponent` which is set to `true` by default.
+* The Arcade Physics `World.enableBody` method will now only create and add a `Body` to an object if it has the Transform component, tested by checking the `hasTransformComponent` property. Without the Transform component, creating a Body would error with NaN values, causing the rest of the bodies in the world to fail.
+* `ProcessQueue.isActive` is a new method that tests if the given object is in the active list, or not.
+* `ProcessQueue.isPending` is a new method that tests if the given object is in the pending insertion list, or not.
+* `ProcessQueue.isDestroying` is a new method that tests if the given object is pending destruction, or not.
+* `ProcessQueue.add` will no longer place the item into the pending list if it's already active or pending.
+* `ProcessQueue.remove` will check if the item is in the pending list, and simply remove it, rather than destroying it.
+* `Container.addHandler` will now call `GameObject.addedToScene`.
+* `Container.removeHandler` will now call `GameObject.removedFromScene`.
 
 ### Bug Fixes
 
@@ -202,9 +226,34 @@ The following are API-breaking, in that a new optional parameter has been insert
 * `TextureManager.getBase64` will now skip the `drawImage` call in canvas if the frame width or height are zero.
 * `TilemapLayerCanvasRenderer` will now skip the `drawImage` call in canvas if the frame width or height are zero.
 * Audio will now unlock properly again on iOS14 and above in Safari. Fix #5696 (thanks @laineus)
+* Drawing Game Objects to a Render Texture in WebGL would skip their blend modes. This is now applied correctly. Fix #5565 #5996 (thanks @sjb933 @danarcher)
+* Loading a Script File Type will now default the 'type' property to 'script' when a type is not provided. Fix #5994 (thanks @samme @ItsGravix)
+* Using `RenderTexture.fill` in CANVAS mode only would produce a nearly always black color due to float conversion (thanks @andymikulski)
+* If you Paused or Stopped a Scene that was in a preload state, it would still call 'create' after the Scene had shutdown (thanks @samme)
+* BitmapText rendering wouldn't correctly apply per-character kerning offsets. These are now implemented during rendering (thanks @arbassic)
+* Child Spine objects inside Containers wouldn't correctly inherit the parent Containers alpha. Fix #5853 (thanks @spayton)
+* The DisplayList will now enter a while loop until all Game Objects are destroyed, rather than cache the list length. This prevents "cannot read property 'destroy' of undefined" errors in Scenes. Fix #5520 (thanks @schontz @astei)
+* Particles can now be moved to 0x0. `moveToX` and `moveToY` now default to null instead of 0 (thanks @samme)
+* Layers will now destroy more carefully when children destroy themselves (thanks @rexrainbow)
+* An error in the `GetBitmapTextSize` function caused kerning to not be applied correctly to Bitmap Text objects. This now works across WebGL and Canvas (thanks @arbassic @TJ09)
+* `WebGLSnapshot` and `CanvasSnapshot` will now Math.floor the width/height values to ensure no sub-pixel dimensions, which corrupts the resulting texture. Fix #6099 (thanks @orjandh)
+* `ContainerCanvasRenderer` would pass in a 5th `container` parameter to the child `renderCanvas` call, which was breaking the `GraphicsCanvasRenderer` and isn't needed by any Game Object, so has been removed. Fix #6093 (thanks @Antriel)
+* Fixed issue in `Utils.Objects.GetValue` where it would return an incorrect result if a `source` and `altSource` were provided that didn't match in structure. Fix #5952 (thanks @rexrainbow)
+* Fixed issue in Game Config where having an empty object, such as `render: {}` would cause set properties to be overriden with the default value. Fix #6097 (thanks @michalfialadev)
+* The `SceneManager.moveAbove` and `moveBelow` methods didn't check the order of the Scenes being moved, so moved them even if one was already above / below the other. Both methods now check the indexes first. Fix #6040 (thanks @yuupsup)
+* Setting `scale.mode` in the Game Config would be ignored. It now accepts either this, or `scaleMode` directly. Fix #5970 (thanks @samme)
+* The frame duration calculations in the `AnimationManager.createFromAseprite` method would be incorrect if they contained a mixture of long and very short duration frames (thanks @martincapello)
+* The `TilemapLayer.getTilesWithinShape` method would not return valid results when used with a Line geometry object. Fix #5640 (thanks @hrecker @samme)
+* Modified the way Phaser uses `require` statements in order to fix an issue in Google's closure-compiler when variables are re-assigned to new values (thanks @TJ09)
+* When creating a `MatterTileBody` from an isometric tile the tiles top value would be incorrect. The `getTop` method has been fixed to address this (thanks @adamazmil)
+* Sprites created directly (not via the Game Object Factory) which are then added to a Container would fail to play their animations, because they were not added to the Scene Update List. Fix #5817 #5818 #6052 (thanks @prakol16 @adomas-sk)
+* Game Objects that were created and destroyed (or moved to Containers) in the same frame were not correctly removed from the UpdateList. Fix #5803 (thanks @samme)
+* `Container.removeHandler` now specifies the context for `Events.DESTROY`, fixing an issue where objects moved from one container, to another, then destroyed, would cause `sys` reference errors. Fix 5846 (thanks @sreadixl)
+* `Container.removeAll` (which is also called when a Container is destroyed) will now directly destroy the children, if the given parameter is set, rather than doing it after removing them via the event handler. This fixes an issue where nested Containers would add destroyed children back to the Scene as part of their shutdown process. Fix #6078 (thanks @BenoitFreslon)
+* The `DisplayList.addChildCallback` method will now check to see if the child has a parent container, and if it does, remove it from there before adding it to the Scene Display List. Fix #6091 (thanks @michalfialadev)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@necrokot Golen @Pythux @samme @danfoster @eltociear @sylvainpolletvillard @hanzooo @etherealmachine @DeweyHur @twoco @austinlyon @Arcanorum OmniOwl @EsteFilipe @PhaserEditor2D @Fake 
+@necrokot Golen @Pythux @samme @danfoster @eltociear @sylvainpolletvillard @hanzooo @etherealmachine @DeweyHur @twoco @austinlyon @Arcanorum OmniOwl @EsteFilipe @PhaserEditor2D @Fake @jonasrundberg @xmahle @arosemena @monteiz @VanaMartin

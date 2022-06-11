@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -550,7 +550,7 @@ var WebGLRenderer = new Class({
          *
          * You can specify this as a string in the game config, i.e.:
          *
-         * `renderer: { mipmapFilter: 'NEAREST_MIPMAP_LINEAR' }`
+         * `render: { mipmapFilter: 'NEAREST_MIPMAP_LINEAR' }`
          *
          * The 6 options for WebGL1 are, in order from least to most computationally expensive:
          *
